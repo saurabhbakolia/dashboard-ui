@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 
-type pageOptions = 'DASHBOARD' | 'INTEGRATIONS' | 'SETTINGS' | 'CALENDAR' | 'TIMEOFF' | 'PROJECTS' | 'TEAMS' | 'BENEFITS' | 'DOCUMENTS' | 'SUPPORT'
+type pageOptions = 'DASHBOARD' | 'INTEGRATIONS' | 'SETTINGS' | 'CARDS' | 'INVESTMENTS' | 'DEBTOR' | 'TEAMS' | 'TRANSACTIONS' | 'DOCUMENTS' | 'SUPPORT'
 
 interface centralStore {
     activePage: pageOptions

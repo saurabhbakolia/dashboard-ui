@@ -49,6 +49,21 @@ function Sidebar() {
                             Transactions
                         </Link>
 
+                        <Link href={'/app/investments'} className={`flex ${pathname === '/app/investments' ? 'text-primary' : ''} hover:px-8 duration-200 px-6 py-2 items-center gap-2`}>
+                            <Profile2User size={16} />
+                            Investments
+                        </Link>
+
+                        <Link href={'/app/cards'} className={`flex ${pathname === '/app/cards' ? 'text-primary' : ''} hover:px-8 duration-200 px-6 py-2 items-center gap-2`}>
+                            <Profile2User size={16} />
+                            Cards
+                        </Link>
+
+                        <Link href={'/app/debtor'} className={`flex ${pathname === '/app/debtor' ? 'text-primary' : ''} hover:px-8 duration-200 px-6 py-2 items-center gap-2`}>
+                            <Profile2User size={16} />
+                            Debtor Credit Risk Checking
+                        </Link>
+
                         <Link href={'/app/integrations'} className={`flex ${pathname === '/app/integrations' ? 'text-primary' : ''} hover:px-8 duration-200 px-6 py-2 items-center gap-2`}>
                             <Setting4 size={16} />
                             AI Chat Assistant
