@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useCentralStore } from '@/Store'
 import axios from 'axios';
 import { OpenAI } from "openai";
+import { useRouter } from "next/navigation";
 
 const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Store API key in environment variable
@@ -35,15 +36,58 @@ const categorizedQuestions = {
     ]
 };
 
+const navigationOptions = [
+    { label: "Dashboard", path: "/app/dashboard" },
+    { label: "Transactions", path: "/app/teams" },
+    { label: "Investments", path: "/app/investments" },
+    { label: "Cards", path: "/app/cards" },
+    { label: "Debtor Credit Risk Checking", path: "/app/debtor" },
+    { label: "AI Chat Assistant", path: "/app/integrations" },
+];
+
 const selectedQuestions = Object.values(categorizedQuestions).map((questions) => questions[0]);
 
 function Integrations() {
     const [messages, setMessages] = useState<{ text: string; sender: "user" | "ai" }[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const router = useRouter();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInput(value);
+
+        if (value.startsWith('/')) {
+            setShowSuggestions(true);
+        } else {
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSelect = (path: string) => {
+        setInput('');
+        setShowSuggestions(false);
+        router.push(path);
+    };
 
     const handleSendMessage = async (message: string, predefinedAnswer?: string) => {
         if (!message.trim()) return;
+
+        const normalizedMessage = message.trim().toLowerCase();
+        const navigationMap: { [key: string]: string } = {
+            "/dashboard": "/app/dashboard",
+            "/transactions": "/app/teams",
+            "/investments": "/app/investments",
+            "/cards": "/app/cards",
+            "/debtor": "/app/debtor",
+            "/ai chat assistant": "/app/integrations",
+        };
+
+        if (normalizedMessage in navigationMap) {
+            router.push(navigationMap[normalizedMessage]);
+            return;
+        }
 
         setMessages((prev) => [...prev, { text: message, sender: "user" }]);
 
@@ -147,10 +191,28 @@ function Integrations() {
                         <input
                             type="text"
                             value={input}
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(e) => {
+                                setInput(e.target.value);
+                                handleChange(e);
+                            }}
                             placeholder="Type a message..."
                             className="flex-1 border px-3 py-2 rounded-lg outline-none"
                         />
+
+                        {showSuggestions && (
+                            <div className="absolute bottom-24 left-80 w-fit bg-gray-100 shadow-lg border rounded-md z-50">
+                                {navigationOptions.map((option) => (
+                                    <div
+                                        key={option.path}
+                                        onClick={() => handleSelect(option.path)}
+                                        className="p-2 cursor-pointer hover:bg-gray-100 text-xs"
+                                    >
+                                        {option.label}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
                         <button onClick={() => handleSendMessage(input)} className="bg-primary text-white px-4 py-2 rounded-lg">
                             {loading ? "Sending..." : "Send"}
                         </button>
